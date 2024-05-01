@@ -15,6 +15,10 @@ const findMoves = function findPossibleKnightMoves(i){
   const column = i % 8;
 
   return [row, column];
+
+  // if any of the accesses go out of bounds (negative index, or index value undefined)
+  // then it is a move that would end up off the board, so we don't push it to the possibleMoves array
+
   // try left & down
   // left 2, down 1
   // left 1, down 2
