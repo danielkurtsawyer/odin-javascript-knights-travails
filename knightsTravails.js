@@ -11,6 +11,10 @@ for(let i=0; i<8; i++){
 // function to generate possible moves, leaving from vertex i, entering the vertexes returned by the function
 const findMoves = function findPossibleKnightMoves(i){
   const possibleMoves = [];
+  const row = Math.floor(i/8);
+  const column = i % 8;
+
+  return [row, column];
   // try left & down
   // left 2, down 1
   // left 1, down 2
@@ -30,4 +34,4 @@ const findMoves = function findPossibleKnightMoves(i){
 }
 
 // board set up
-console.log(findMoves());
+console.log(findMoves(26));
