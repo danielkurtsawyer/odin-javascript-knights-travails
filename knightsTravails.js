@@ -157,3 +157,4 @@ const doBFS = function breadthFirstSearch(graph, vertexStart, vertexEnd){
 
 // search algorithm with be a BFS due to cycles
 knightMoves([0,0], [1,0]);
+knightMoves([7,7], [0,0]);
