@@ -7,6 +7,7 @@ for(let i=0; i<8; i++){
     tempBoard[i][j] = 8*i + j;
   }
 }
+console.log(tempBoard);
 
 // function to generate possible moves, leaving from vertex i, entering the vertexes returned by the function
 const findMoves = function findPossibleKnightMoves(i){
@@ -67,14 +68,64 @@ const createGraph = function createAdjacencyList(){
   return board;
 }
 
-// board set up
-console.log(tempBoard);
+// create graph representation
+const board = createGraph();
+
+// start and end are coordinates
+// NOTE: this implementation uses an alternate coordinate system from the picture from TOP, 
+// with rows increasing going down like so: 
+//   0 1 2 3 4 5 6 7
+// 0 x x x x x x x x
+// 1 x x x x x x x x
+// 2 x x x x x x x x 
+// 3 x x x x x x x x 
+// 4 x x x x x x x x 
+// 5 x x x x x x x x 
+// 6 x x x x x x x x 
+// 7 x x x x x x x x 
+const knightMoves = function calculateMinKnightMoves(start, end){
+  // perform BFS on graph to find a path from start to end
+  // convert start coordinates to a vertex number
+  const vertexStart = start[0] * 8 + start[1];
+  const vertexEnd = end[0] * 8 + end[1];
+  return doBFS(board, vertexStart);
+}
+
+const doBFS = function breadthFirstSearch(graph, start){
+  console.log('start', start);
+  const queue = [];
+  queue.push(start);
+  const visited = [];
+
+  // while the queue has vertexes
+  while(queue.length > 0){
+    // visit the vertex at the top of the queue
+    let vertex = queue.shift();
+    console.log(vertex);
+    // use the adjacency list to find its neighbors
+    graph[vertex].forEach((neighbor) =>{
+      // for every neighbor, if it hasn't been seen or visited yet
+      if(!queue.includes(neighbor) && !visited.includes(neighbor)){
+        // add it to the queue to be visited in the future 
+        queue.push(neighbor);
+      }
+    })
+    
+    // push the vertex into the visited array
+    visited.push(vertex);
+  }
+
+  console.log('BFS array length', visited.length);
+  // return the visited array
+  return visited;
+}
+
 // findMoves with all moves possible
 console.log(findMoves(26));
 // findMoves with upper move restriction - only 4 should be shown
 console.log(findMoves(24));
 
-// create graph representation
-const board = createGraph();
-
 console.log(board);
+
+// search algorithm with be a BFS due to cycles
+console.log(knightMoves([0,0], [1,0]));
