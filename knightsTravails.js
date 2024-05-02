@@ -52,11 +52,19 @@ const findMoves = function findPossibleKnightMoves(i){
     possibleMoves.push(tempBoard[column+2][row-1]);
   }
   // right 1, up 2
-  if(column+1 >=0 && row-2 >=0){
+  if(column+1 <= 7 && row-2 >=0){
     possibleMoves.push(tempBoard[column+1][row-2]);
   }
 
   return possibleMoves;
+}
+
+const createGraph = function createAdjacencyList(){
+  const board = [];
+  for(let i = 0; i < 64; i++){
+    board[i] = findMoves(i);
+  }
+  return board;
 }
 
 // board set up
@@ -65,3 +73,8 @@ console.log(tempBoard);
 console.log(findMoves(26));
 // findMoves with upper move restriction - only 4 should be shown
 console.log(findMoves(24));
+
+// create graph representation
+const board = createGraph();
+
+console.log(board);
