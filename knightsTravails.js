@@ -7,7 +7,7 @@ for(let i=0; i<8; i++){
     tempBoard[i][j] = 8*i + j;
   }
 }
-console.log(tempBoard);
+// console.log(tempBoard);
 
 // function to generate possible moves, leaving from vertex i, entering the vertexes returned by the function
 const findMoves = function findPossibleKnightMoves(i){
@@ -88,44 +88,72 @@ const knightMoves = function calculateMinKnightMoves(start, end){
   // convert start coordinates to a vertex number
   const vertexStart = start[0] * 8 + start[1];
   const vertexEnd = end[0] * 8 + end[1];
-  return doBFS(board, vertexStart);
+  // do a BFS search from the start vertex to the end vertex to find the shortest path
+  const path = doBFS(board, vertexStart, vertexEnd);
+
+  // path is an array of vertices, so we have to convert it to an array of coordinates
+  const coordinatePath = convertPath(path);
+  
+  // now just create a string to return the outcome
+  let outcome = `You made it in ${coordinatePath.length} moves! Here's your path:`;
+  // append each of the coordinates on a new line
+  coordinatePath.forEach((coordinate)=>outcome = outcome + `\n[${coordinate}]`);
+  console.log(outcome);
 }
 
-const doBFS = function breadthFirstSearch(graph, start){
-  console.log('start', start);
-  const queue = [];
-  queue.push(start);
-  const visited = [];
+const convertPath = function convertVertexPathToCoordinatePath(path){
+  // use the same row/column logic as before to map the vertices to the coordinate pairs
+  return path.map((vertex)=>[Math.floor(vertex/8), vertex % 8]);
+}
 
-  // while the queue has vertexes
+// performs a BFS and returns the shortest path from vertexStart to vertexEnd
+// returns an array of vertices in order of path traversal
+const doBFS = function breadthFirstSearch(graph, vertexStart, vertexEnd){
+  // the queue will store paths
+  const queue = [];
+  // all paths will start from vertexStart
+  queue.push([vertexStart]);
+  // this array will store visited vertices so we don't create cycles or inoptimal paths
+  const visited = [];
+  
+  // while the queue has paths
   while(queue.length > 0){
-    // visit the vertex at the top of the queue
-    let vertex = queue.shift();
-    console.log(vertex);
+    // look at the path at the top of the queue
+    let path = queue.shift();
+    // console.log('path', path);
+    // visit the last vertex in the path
+    let vertex = path[path.length-1];
+    // check to see if the new vertex has completed the path
+    if(vertex === vertexEnd){
+      // if so, we have found the path and should return it
+      // this will be in the set of the shortest paths
+      return path;
+    }
+    
+    // if it doesn't complete the path, 
     // use the adjacency list to find its neighbors
     graph[vertex].forEach((neighbor) =>{
-      // for every neighbor, if it hasn't been seen or visited yet
-      if(!queue.includes(neighbor) && !visited.includes(neighbor)){
+      // for every neighbor, if it hasn't been visited yet
+      if(!visited.includes(neighbor)){
         // add it to the queue to be visited in the future 
-        queue.push(neighbor);
+        // this will be added to the end of the path and pushed back to the end of the queue
+        let newPath = path.slice();
+        newPath.push(neighbor);
+        // add the new path to the end of the queue
+        queue.push(newPath);
       }
     })
-    
-    // push the vertex into the visited array
+    // push the vertex into the visited array before looking at the next path in the queue
     visited.push(vertex);
   }
-
-  console.log('BFS array length', visited.length);
-  // return the visited array
-  return visited;
 }
 
 // findMoves with all moves possible
-console.log(findMoves(26));
+// console.log(findMoves(26));
 // findMoves with upper move restriction - only 4 should be shown
-console.log(findMoves(24));
+// console.log(findMoves(24));
 
-console.log(board);
+// console.log(board);
 
 // search algorithm with be a BFS due to cycles
-console.log(knightMoves([0,0], [1,0]));
+knightMoves([0,0], [1,0]);
